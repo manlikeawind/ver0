@@ -6,6 +6,12 @@ public class CameraCtrl : MonoBehaviour
 {
 
     public GameObject player;
+    public enum Status
+    {
+        None = 0,
+        Idle, Move
+    }
+    private Status status;
 
     private void Awake()
     {
@@ -14,7 +20,11 @@ public class CameraCtrl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        transform.position = new Vector3(
+            player.transform.position.x,
+            player.transform.position.y + 3.7775f,
+            transform.position.z);
+        status = Status.Idle;
     }
 
     // Update is called once per frame
