@@ -3,32 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Mono.Data.Sqlite;
+using System;
 
-struct Element {
-    public string oid;
+/*struct Element {
+    public string id;
+    public string scene;
     public string type;
-    public float posX;
-    public float posY;
+    public int valid;
+    public string description;
+    public int lastUpdate;
 };
+
+struct MonsterInfo
+{
+    public string id;
+    public string scene;
+    public string type;
+    public int valid;
+    public float hp;
+    public string description;
+    public int lastUpdate;
+}*/
 
 public class AreaManager : MonoBehaviour
 {
     private SqliteHelper sqliteHelper;
-    private Hashtable prefabs;
+    /*private Hashtable prefabs;*/
+    private Hashtable objects;
+    private GameObject root;
+    private GameManager gameManager;
+    private string _name;
 
     // Start is called before the first frame update
     void Start()
     {
-        GameManager gameManager = GameManager.Instance;
+        gameManager = GameManager.Instance;
+        root = GameObject.FindGameObjectWithTag("Root");
         sqliteHelper = gameManager.getConnetion();
-        prefabs = new Hashtable();
+        /*prefabs = new Hashtable();*/
+        objects = new Hashtable();
 
-        string[] elements = { "fire", "wind" };
+/*        string[] elements = { "fire", "wind" };
         foreach (string e in elements) {
             string path = "Prefabs/scene/" + e;
             GameObject prefab = (GameObject)Resources.Load(path);
             prefabs.Add(e, prefab);
-        }
+        }*/
 
         constructScene();
     }
@@ -40,42 +60,55 @@ public class AreaManager : MonoBehaviour
     }
 
     public void constructScene() {
-        string name = SceneManager.GetActiveScene().name;
-        string qureyStr = "select * from sceneElements where scene='" + name + "'";
-        SqliteDataReader elementsReader = sqliteHelper.ExecuteQuery(qureyStr);
-        Hashtable elements = new Hashtable();
-        while (elementsReader.Read()) {
-            Element tmp;
-            string key = elementsReader.GetString(elementsReader.GetOrdinal("id"));
-            tmp.oid = elementsReader.GetString(elementsReader.GetOrdinal("oid"));
-            tmp.type = elementsReader.GetString(elementsReader.GetOrdinal("type"));
-            tmp.posX = elementsReader.GetFloat(elementsReader.GetOrdinal("posX"));
-            tmp.posY = elementsReader.GetFloat(elementsReader.GetOrdinal("posY"));
-            elements[key] = tmp;
+        _name = SceneManager.GetActiveScene().name;
+        //init elements
+        for (int i = 0; i < 8; i++) {
+            string qureyStr = "select * from sceneElements where scene='" + _name + "' and sorted=" + i.ToString();
+            SqliteDataReader elementsReader = sqliteHelper.ExecuteQuery(qureyStr);
+            Hashtable elementsResult = new Hashtable();
+            while (elementsReader.Read())
+            {
+                string id = elementsReader.GetString(elementsReader.GetOrdinal("id"));
+                string type = elementsReader.GetString(elementsReader.GetOrdinal("type"));
+                int valid = elementsReader.GetInt32(elementsReader.GetOrdinal("valid"));
+                string description = elementsReader.GetString(elementsReader.GetOrdinal("description"));
+                int lastUpdate = elementsReader.GetInt32(elementsReader.GetOrdinal("lastUpdate"));
+                GameObject obj = root.transform.Find(id).gameObject;
+                if (valid == 1 && obj != null)
+                {
+                    objects.Add(id, obj);
+                    obj.GetComponent<BaseObj>().oid = id;
+                    obj.GetComponent<BaseObj>().type = type;
+                    obj.GetComponent<BaseObj>().lastUpdate = lastUpdate;
+                    obj.GetComponent<BaseObj>().construct(description);
+                }
+            }
         }
-        foreach(string key in elements.Keys) {
-            Element e = (Element)elements[key];
-            string sqlstr = "select * from " + e.type + " where id='" + e.oid + "'";
-            SqliteDataReader reader = sqliteHelper.ExecuteQuery(sqlstr);
-            reader.Read();
-            GameObject instance;
-            if (prefabs.ContainsKey(e.type))
+        //init monsters
+        string monsterQureyStr = "select * from monster where scene='" + _name + "'";
+        SqliteDataReader monsterReader = sqliteHelper.ExecuteQuery(monsterQureyStr);
+        while (monsterReader.Read())
+        {
+            string id = monsterReader.GetString(monsterReader.GetOrdinal("id"));
+            string type = monsterReader.GetString(monsterReader.GetOrdinal("type"));
+            int valid = monsterReader.GetInt32(monsterReader.GetOrdinal("valid"));
+            float hp = monsterReader.GetFloat(monsterReader.GetOrdinal("hp"));
+            string description = monsterReader.GetString(monsterReader.GetOrdinal("description"));
+            int lastUpdate = monsterReader.GetInt32(monsterReader.GetOrdinal("lastUpdate"));
+            GameObject obj = root.transform.Find(id).gameObject;
+            if(valid == 1 && obj != null)
             {
-                instance = Instantiate((GameObject)prefabs[e.type]);
+                objects.Add(id, obj);
+                obj.GetComponent<Monster>().oid = id;
+                obj.GetComponent<Monster>().type = type;
+                obj.GetComponent<Monster>().lastUpdate = lastUpdate;
+                obj.GetComponent<Monster>().hp = hp;
+                obj.GetComponent<Monster>().construct(description);
             }
-            else 
-            {
-                string path = "Prefabs/scene/" + e.type;
-                GameObject prefab = (GameObject)Resources.Load(path);
-                prefabs.Add(e.type, prefab);
-                instance = Instantiate(prefab);
-            }
-            instance.name = e.oid;
-            instance.transform.position = new Vector2(e.posX, e.posY);
         }
     }
 
-    public GameObject instGameObject(string name) {
+    /*public GameObject instGameObject(string name) {
         GameObject instance;
         if (prefabs.ContainsKey(name))
         {
@@ -89,5 +122,19 @@ public class AreaManager : MonoBehaviour
             instance = Instantiate(prefab);
         }
         return instance;
+    }*/
+
+    public GameObject getAreaGameObject(string id)
+    {
+        GameObject obj = (GameObject)objects[id];
+        return obj;
+    }
+
+    public void transformToNextScene(string next, float x, float y) {
+        //save the scene
+        //to do
+
+        //transform to next scene
+        gameManager.transformScene(next, x, y);
     }
 }

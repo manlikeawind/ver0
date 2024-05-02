@@ -22,11 +22,6 @@ public class Fire_test : MonoBehaviour
             {
                 collider.gameObject.GetComponent<BaseObj>().fired();
             }
-            Collider2D[] list2 = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y - 1.5f), 2f, objs);
-            foreach (Collider2D collider in list2)
-            {
-                collider.gameObject.GetComponent<BaseObj>().heat();
-            }
         }
     }
 }

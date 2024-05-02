@@ -30,6 +30,12 @@ public class SqliteHelper
         return dataReader;
     }
 
+    public void ExecuteCommand(string command) {
+        dbCommand = dbConnection.CreateCommand();
+        dbCommand.CommandText = command;
+        dbCommand.ExecuteNonQuery();
+    }
+
     public void CloseConnection()
     {
         //销毁Command

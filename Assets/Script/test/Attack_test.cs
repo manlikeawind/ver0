@@ -27,7 +27,7 @@ public class Attack_test : MonoBehaviour
                 Collider2D[] list = Physics2D.OverlapBoxAll(new Vector2(transform.position.x + 0.5f, transform.position.y - 1f), new Vector2(1, 1), 0, objs);
                 foreach (Collider2D collider in list)
                 {
-                    collider.gameObject.GetComponent<BaseObj>().attacked(1, 20f);
+                    collider.gameObject.GetComponent<BaseObj>().attacked(AttackMode.Axe, 20f);
                 }
             }
             else
@@ -35,7 +35,7 @@ public class Attack_test : MonoBehaviour
                 Collider2D[] list = Physics2D.OverlapBoxAll(new Vector2(transform.position.x - 0.5f, transform.position.y - 1f), new Vector2(1, 1), 0, objs);
                 foreach (Collider2D collider in list)
                 {
-                    collider.gameObject.GetComponent<BaseObj>().attacked(1, 20f);
+                    collider.gameObject.GetComponent<BaseObj>().attacked(AttackMode.Axe, 20f);
                 }
             }
         }
