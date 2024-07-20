@@ -39,7 +39,7 @@ public class AreaManager : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         root = GameObject.FindGameObjectWithTag("Root");
-        sqliteHelper = gameManager.getConnetion();
+        //sqliteHelper = gameManager.getConnetion();
         /*prefabs = new Hashtable();*/
         objects = new Hashtable();
 
@@ -61,8 +61,9 @@ public class AreaManager : MonoBehaviour
 
     public void constructScene() {
         _name = SceneManager.GetActiveScene().name;
+        gameManager.setSceneLoadComplete();
         //init elements
-        for (int i = 0; i < 8; i++) {
+        /*for (int i = 0; i < 8; i++) {
             string qureyStr = "select * from sceneElements where scene='" + _name + "' and sorted=" + i.ToString();
             SqliteDataReader elementsReader = sqliteHelper.ExecuteQuery(qureyStr);
             Hashtable elementsResult = new Hashtable();
@@ -105,7 +106,7 @@ public class AreaManager : MonoBehaviour
                 obj.GetComponent<Monster>().hp = hp;
                 obj.GetComponent<Monster>().construct(description);
             }
-        }
+        }*/
     }
 
     /*public GameObject instGameObject(string name) {
@@ -135,6 +136,6 @@ public class AreaManager : MonoBehaviour
         //to do
 
         //transform to next scene
-        gameManager.transformScene(next, x, y);
+        //gameManager.transformScene(next, x, y);
     }
 }

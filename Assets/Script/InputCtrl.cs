@@ -52,12 +52,12 @@ public class InputCtrl : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-        type = 1;
+        type = 0;
         events = new Queue<Event>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         float now = Time.realtimeSinceStartup;
 
@@ -156,6 +156,14 @@ public class InputCtrl : MonoBehaviour
             else
             {
                 dir_x = 0.0f;
+            }
+
+            if(Input.GetKey(KeyCode.Space)) {
+                btn_a = 1.0f;
+            }
+            else
+            {
+                btn_a = 0f;
             }
         }
         

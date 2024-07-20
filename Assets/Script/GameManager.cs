@@ -1,35 +1,40 @@
-﻿using Mono.Data.Sqlite;
+﻿using Common;
+using Mono.Data.Sqlite;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
-
-
-public enum AttackMode
-{
-    None = 0,
-    sword, dagger, Boom, Axe, Hammer,
-}
+using UnityEngine.Video;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
-    private SqliteHelper sqliteHelper;
+    //private SqliteHelper sqliteHelper;
     private InputCtrl input;
-    private int menuStatus; // 0-close; 1-open
-    private GameObject menuObj;
     public enum Status
     {
         None,
+        Pre,
         Run,
-        OnUI
+        OnUI,
+        Onload
     }
+
+    private Status status;
+    private Status nextStatus;
+    private float statusTime;
+    private bool sceneLoadComplete;
 
     public uint frameNum;
     public float gameTime;
-    public bool start;
+    public SaveLoad saveLoad;
+    public GameObject videoPlayer;
+    public TextInfo textInfo;
 
 /*    public Dictionary<string, XmlNode> npcInfo;
     public Dictionary<string, XmlNode> itemInfo;
@@ -45,11 +50,10 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-        start = true;
         input = GetComponent<InputCtrl>();
-        menuStatus = 1;
-        menuObj = GameObject.FindGameObjectWithTag("Menu");
         DontDestroyOnLoad(gameObject);
+        /*menuStatus = 1;
+        menuObj = GameObject.FindGameObjectWithTag("Menu");
 
         //connect to sqlite database
         string connectPath = "Data Source = " + Application.streamingAssetsPath + "/database.db";
@@ -63,63 +67,123 @@ public class GameManager : MonoBehaviour
             transformScene(sceneName, x, y);
             //SceneManager.LoadSceneAsync(sceneName);
             break;
-        }
+        }*/
     }
 
     private void Start()
     {
+        saveLoad = new SaveLoad();
+        textInfo = new TextInfo();
         frameNum = 0;
         gameTime = 0.0f;
-        //loadScene("test");
+        status = Status.None;
+        nextStatus = Status.Pre;
+        statusTime = 0f;
+        sceneLoadComplete = false;
     }
 
     private void OnDestroy()
     {
-        sqliteHelper.CloseConnection();
+        //sqliteHelper.CloseConnection();
     }
 
     private void Update()
     {
         gameTime = gameTime + Time.deltaTime;
-    }
-
-    private void FixedUpdate()
-    {
-        //if menu is open
-        if (input.consumeBtnStartDown(0.2f)) {
-            if (menuStatus == 0)
+        statusTime = statusTime + Time.deltaTime;
+        if(nextStatus != Status.None)
+        {
+            //init status
+            switch(nextStatus)
             {
-                menuObj.SetActive(true);
-                menuStatus = 1;
+                case Status.Pre:
+                    List<JObject> saveList = saveLoad.getSaveList();
+                    if (saveList.Count == 0)
+                    {
+                        startNewGame();
+                    }
+                    else
+                    {
+                        SceneManager.LoadSceneAsync("S0");
+                    }
+                    break;
+                case Status.Run:
+                    break;
+                case Status.OnUI:
+                    break;
+                case Status.Onload:
+                    sceneLoadComplete = false;
+                    JObject activeSave = saveLoad.activeSave;
+                    if (activeSave != null)
+                    {
+                        string scene = (string)activeSave["data"]["player"]["position"]["scene"];
+                        SceneManager.LoadSceneAsync(scene);
+                    }
+                    break;
             }
-            else if(menuStatus == 1){
-                menuObj.SetActive(false);
-                menuStatus = 0;
+            status = nextStatus;
+            nextStatus = Status.None;
+            statusTime = 0f;
+        }
+        else
+        {
+            switch (status)
+            {
+                case Status.Pre:
+                    break;
+                case Status.Run:
+                    break;
+                case Status.OnUI:
+                    break;
+                case Status.Onload:
+                    if(statusTime > 2f && sceneLoadComplete == true)
+                    {
+                        nextStatus = Status.Run;
+                    }
+                    break;
             }
         }
     }
 
-    public SqliteHelper getConnetion() {
-        return sqliteHelper;
+    public void setSceneLoadComplete() {
+        sceneLoadComplete = true;
     }
+
+    public void startNewGame() {
+        VideoPlayer vp = videoPlayer.GetComponent<VideoPlayer>();
+        vp.isLooping = false;
+        vp.loopPointReached += endBeginingAnimation;
+        videoPlayer.SetActive(true);
+    }
+
+    private void endBeginingAnimation(VideoPlayer vp) {
+        videoPlayer.SetActive(false);
+        saveLoad.createBlankSave();
+        nextStatus = Status.Onload;
+    }
+
+/*    public SqliteHelper getConnetion() {
+        return sqliteHelper;
+    }*/
 
     public void pauseGame()
     {
-        start = false;
         Time.timeScale = 0;
     }
 
     public void resumeGame()
     {
-        start = true;
         Time.timeScale = 1.0f;
     }
 
-    public void transformScene(string next, float x, float y) {
-        SceneManager.LoadScene(next);
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        player.transform.position = new Vector3(x, y, 0);
-    }
+    /*public void transformScene(string next, float x, float y)
+    {
+        nextStatus = Status.Onload;
+        SceneManager.LoadSceneAsync(next);
+        *//*GameObject player = GameObject.FindGameObjectWithTag("Player");
+        player.transform.position = new Vector3(x, y, 0);*//*
+
+    }*/
 
     public void saveGame() { 
     }

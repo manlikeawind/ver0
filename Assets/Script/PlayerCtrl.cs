@@ -82,7 +82,7 @@ public class PlayerCtrl : MonoBehaviour
     public Texture2D suit;
     #endregion
 
-    private void Awake()
+    private void Start()
     {
         DontDestroyOnLoad(gameObject);
         rb2d = GetComponent<Rigidbody2D>();
@@ -104,10 +104,6 @@ public class PlayerCtrl : MonoBehaviour
 
         equipWeapon = Weapon.Katateken;
     }
-    // Start is called before the first frame update
-/*    void Start()
-    {
-    }*/
 
     void OnDrawGizmos()
     {
@@ -817,6 +813,8 @@ public class PlayerCtrl : MonoBehaviour
         double count = Math.Floor(statusTime / frameTime);
         double c = count - Math.Floor(count / 8.0) * 8.0 + 8.0;
         bodySprd.material.SetFloat("_Show", (float)c);
+        weapSprd.material.SetFloat("_Show", 0f);
+        maskSprd.material.SetFloat("_Show", (float)c);
         if (playerInput.getDirX() > 0f)
         {
             rb2d.velocity = new Vector2(maxSpeed, 0.0f);

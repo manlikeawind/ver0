@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Common;
 
 public class Box : BaseObj
 {
@@ -44,17 +45,15 @@ public class Box : BaseObj
         }
     }
 
-    public override void attacked(AttackMode weaponType, float damage)
+    public override void attacked(Weapon weaponType, float damage)
     {
         if (valid == false) return;
         switch (weaponType)
         {
-            case AttackMode.sword:
-            case AttackMode.dagger:
+            case Weapon.Katateken:
                 attr.hp = attr.hp - 1;
                 break;
-            case AttackMode.Axe:
-            case AttackMode.Boom:
+            case Weapon.Boom:
                 attr.hp = 0;
                 break;
             default:

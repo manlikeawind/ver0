@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
+using Common;
 
 public class MonsterSwordN : Monster
 {
@@ -91,7 +91,7 @@ public class MonsterSwordN : Monster
         gameObject.SetActive(false);
     }
 
-    public override void attacked(AttackMode attackMode, float damage)
+    public override void attacked(Weapon attackMode, float damage)
     {
         if(pattern == Pattern.Normal && status != Status.Search)
         {

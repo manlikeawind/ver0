@@ -26,6 +26,11 @@ namespace Common {
     public enum Weapon
     {
         None = 0,
-        Katateken
+        Katateken, Boom
+    }
+
+    public enum VideoName { 
+        None = 0,
+        BeginAnimation
     }
 }

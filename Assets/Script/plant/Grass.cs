@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Common;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -65,15 +66,13 @@ public class Grass : BaseObj
         }
     }
 
-    public override void attacked(AttackMode weaponType, float damage)
+    public override void attacked(Weapon weaponType, float damage)
     {
         if (valid == false) return;
         switch (weaponType)
         {
-            case AttackMode.Axe:
-            case AttackMode.dagger:
-            case AttackMode.sword:
-            case AttackMode.Boom:
+            case Weapon.Katateken:
+            case Weapon.Boom:
                 invalid();
                 break;
             default:

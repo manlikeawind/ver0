@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Common;
 
-public class SlimeSwordN : Slime
+public class SlimeShieldN : Slime
 {
     private void FixedUpdate()
     {
@@ -23,8 +22,10 @@ public class SlimeSwordN : Slime
                 alarm();
             }
         }
-        else if (pattern == 1) {
-            if (groupCtrl.getToken()) { 
+        else if (pattern == 1)
+        {
+            if (groupCtrl.getToken())
+            {
                 pattern = 2;
             }
             if (player.transform.position.x < lx || player.transform.position.x > rx)
@@ -90,6 +91,9 @@ public class SlimeSwordN : Slime
             case Status.Move:
                 anim.Play("monsterSwordN_move");
                 break;
+            case Status.Deffence:
+                anim.Play("monsterSwordN_alert");
+                break;
             case Status.Attack1:
                 rb2d.velocity = new Vector2(0f, 0f);
                 anim.Play("monsterSwordN_attack");
@@ -112,7 +116,7 @@ public class SlimeSwordN : Slime
         switch (status)
         {
             case Status.Rest:
-                if(pattern > 0)
+                if (pattern > 0)
                 {
                     nextStatus = Status.Move;
                 }
@@ -137,7 +141,7 @@ public class SlimeSwordN : Slime
                         rb2d.velocity = new Vector2(speed * faceTo, 0.0f);
                     }
                 }
-                else if(pattern == 1)
+                else if (pattern == 1)
                 {
                     if (player.transform.position.x > transform.position.x)
                     {
@@ -155,7 +159,8 @@ public class SlimeSwordN : Slime
                 }
                 else if (pattern == 2)
                 {
-                    if (player.transform.position.x > transform.position.x) { 
+                    if (player.transform.position.x > transform.position.x)
+                    {
                         faceTo = 1f;
                     }
                     else
@@ -163,8 +168,8 @@ public class SlimeSwordN : Slime
                         faceTo = -1f;
                     }
                     rb2d.velocity = new Vector2(speed * faceTo, 0.0f);
-                    if (faceTo* player.transform.position.x > faceTo * transform.position.x 
-                        && faceTo * player.transform.position.x < faceTo * (transform.position.x + faceTo * (1f + 0.5*randomValue))) 
+                    if (faceTo * player.transform.position.x > faceTo * transform.position.x
+                        && faceTo * player.transform.position.x < faceTo * (transform.position.x + faceTo * (0.5f + 0.5 * randomValue)))
                     {
                         nextStatus = Status.Attack1;
                     }
@@ -178,7 +183,7 @@ public class SlimeSwordN : Slime
                         nextStatus = Status.Move;
                     }
                 }
-                else if(pattern == 1)
+                else if (pattern == 1)
                 {
                     if (player.transform.position.x > transform.position.x)
                     {
@@ -189,14 +194,15 @@ public class SlimeSwordN : Slime
                         faceTo = -1f;
                     }
                     if (!(faceTo * player.transform.position.x > faceTo * transform.position.x
-                        && faceTo * player.transform.position.x < faceTo * (transform.position.x + faceTo * (1f + randomValue / 2))))
+                        && faceTo * player.transform.position.x < faceTo * (transform.position.x + faceTo * (0.5f + randomValue / 2))))
                     {
                         nextStatus = Status.Move;
                     }
                 }
                 else if (pattern == 2)
                 {
-                    if (statusTime > 1.0f) {
+                    if (statusTime > 1.0f)
+                    {
                         if (player.transform.position.x > transform.position.x)
                         {
                             faceTo = 1f;
@@ -206,11 +212,12 @@ public class SlimeSwordN : Slime
                             faceTo = -1f;
                         }
                         if (faceTo * player.transform.position.x > faceTo * transform.position.x
-                            && faceTo * player.transform.position.x < faceTo * (transform.position.x + faceTo * (1f + randomValue / 2)))
+                            && faceTo * player.transform.position.x < faceTo * (transform.position.x + faceTo * (0.5f + randomValue / 2)))
                         {
                             nextStatus = Status.Attack1;
                         }
-                        else {
+                        else
+                        {
                             nextStatus = Status.Move;
                         }
                     }
@@ -236,7 +243,8 @@ public class SlimeSwordN : Slime
         }
     }
 
-    private bool rectOverlap() {
+    private bool rectOverlap()
+    {
         return true;
     }
 }

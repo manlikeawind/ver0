@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Common;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -64,12 +65,10 @@ public class Tree : BaseObj
         fruits = new Hashtable();
     }
 
-    public override void attacked(AttackMode weaponType, float damage) {
+    public override void attacked(Weapon weaponType, float damage) {
         if (valid == false) return;
         switch (weaponType) {
-            case AttackMode.sword:
-            case AttackMode.dagger:
-            case AttackMode.Axe:
+            case Weapon.Katateken:
                 attr.chopCount = attr.chopCount + 1;
                 if(attr.chopCount == 1)
                 {
@@ -84,7 +83,7 @@ public class Tree : BaseObj
                     invalid();
                 }
                 break;
-            case AttackMode.Boom:
+            case Weapon.Boom:
                 invalid();
                 break;
             default:

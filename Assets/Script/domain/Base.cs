@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Common;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ abstract public class BaseObj : MonoBehaviour
     public virtual void freeze() { }
     public virtual void cooling() { }
     public virtual void wind(float dirx, float diry) { }
-    public virtual void attacked(AttackMode weapon, float damage) { }
+    public virtual void attacked(Weapon weapon, float damage) { }
     public virtual void magnetism() { }
     public virtual void pickUp() { }
     public virtual void addChild(string id, GameObject child) { }

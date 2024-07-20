@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using Common;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Common;
 
 public class Breakstone : BaseObj
 {
@@ -47,10 +49,10 @@ public class Breakstone : BaseObj
         manager = GameObject.FindGameObjectWithTag("AreaManager").GetComponent<AreaManager>();
     }
 
-    public override void attacked(AttackMode weapon, float damage)
+    public override void attacked(Weapon weapon, float damage)
     {
         if (valid == false) return;
-        if(weapon == AttackMode.Boom)
+        if(weapon == Weapon.Boom)
         {
             this.invalid();
         }

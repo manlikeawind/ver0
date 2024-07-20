@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Common;
 
 public class Monster : MonoBehaviour
 {
@@ -9,5 +10,5 @@ public class Monster : MonoBehaviour
     public int lastUpdate { get; set; }
     public float hp { get; set; }
     public virtual void construct(string info) { }
-    public virtual void attacked(AttackMode attack, float damage) { }
+    public virtual void attacked(Weapon weapon, float damage) { }
 }
