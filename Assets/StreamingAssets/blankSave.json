@@ -1,0 +1,116 @@
+{
+	"valid":1,
+	"scene":"S01A00",
+	"time":0,
+	"playTime":0,
+	"auto":1,
+	"data":{
+		"player": {
+			"position": {
+				"scene": "S01A00",
+				"x": 16.6,
+				"y": 7.6
+			},
+			"attr":{
+				"health":20,
+				"endurence":20,
+				"power":20,
+				"luck":20
+			},
+			"status":{
+				"health":50,
+				"shield":0,
+				"endurence":50
+			},
+			"timeAbility":0,
+			"spaceAbility":0,
+			"natureAbility":0,
+			"mindAbility":0,
+			"equipment":{
+				"weapon":"0",
+				"clothing":"1"
+			}
+		},
+		"bag":{
+			"weapon":
+			{
+				"volume":12,
+				"items":[
+					{
+						"id":"0",
+						"name":"",
+						"attr":10,
+						"desc":"",
+						"gift":""
+					}
+				]
+			},
+			"clothing":{
+				"volume":10,
+				"items":[
+					{
+						"id":"1",
+						"name":"",
+						"attr":10,
+						"desc":"",
+						"gift":""
+					}
+				]
+			},
+			"food&drug":{
+				"volume":40,
+				"items":[
+					{
+						"id":"0",
+						"name":"",
+						"attr":10,
+						"desc":"",
+						"gift":""
+					}
+				]
+			},
+			"metarial":{
+				"volume":40,
+				"items":[
+					{
+						"id":"0",
+						"name":"",
+						"attr":10,
+						"desc":"",
+						"gift":""
+					}
+				]
+			},
+			"special":{
+				"volume":40,
+				"items":[
+					{
+						"id":"0",
+						"name":"",
+						"attr":10,
+						"desc":"",
+						"gift":""
+					}
+				]
+			},
+		},
+		"equipment":{
+			"0":{
+				"name":"",
+				"attr":10,
+				"gift":null
+			},
+			"1":{
+				"name":"",
+				"attr":10,
+				"gift":null
+			}
+		},
+		"element": {
+			"S01A00": {
+				"XXXX": {},
+				"YYYY": {}
+			}
+		}
+	}
+}

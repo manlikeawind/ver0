@@ -10,8 +10,11 @@ public class Teleport : BaseObj
     public float posY;
     public string to;
 
+    private GameManager gameManager;
+
     public override void construct(string info)
     {
+        gameManager = GameManager.Instance;
         JObject o = JObject.Parse(info);
         to = (string)o["to"];
         posX = (float)o["posx"];
@@ -25,7 +28,10 @@ public class Teleport : BaseObj
             GameObject root = GameObject.FindGameObjectWithTag("Root");
             if (root != null)
             {
-                root.GetComponent<AreaManager>().transformToNextScene(to, posX, posY);
+                //update the scene and player position
+                //code here
+
+                gameManager.MoveToNextScene();
             }
         }
     }

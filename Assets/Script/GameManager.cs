@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
     //private SqliteHelper sqliteHelper;
-    private InputCtrl input;
+    public InputCtrl input;
     public enum Status
     {
         None,
@@ -29,16 +29,24 @@ public class GameManager : MonoBehaviour
     private Status nextStatus;
     private float statusTime;
     private bool sceneLoadComplete;
+    private AreaManager areaManager;
+    private UIManager uiManager;
+
+    public GameObject player;
 
     public uint frameNum;
     public float gameTime;
     public SaveLoad saveLoad;
+    public Resource resource;
     public GameObject videoPlayer;
+    public GameObject UIMask;
     public TextInfo textInfo;
 
-/*    public Dictionary<string, XmlNode> npcInfo;
-    public Dictionary<string, XmlNode> itemInfo;
-    public Dictionary<string, XmlNode> playerInfo;*/
+    public JObject gameInfo;
+
+    /*    public Dictionary<string, XmlNode> npcInfo;
+        public Dictionary<string, XmlNode> itemInfo;
+        public Dictionary<string, XmlNode> playerInfo;*/
     public static GameManager Instance
     {
         get
@@ -50,47 +58,30 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-        input = GetComponent<InputCtrl>();
+        saveLoad = new SaveLoad();
+        textInfo = new TextInfo();
+        resource = new Resource();
+        input = InputCtrl.Instance;
         DontDestroyOnLoad(gameObject);
-        /*menuStatus = 1;
-        menuObj = GameObject.FindGameObjectWithTag("Menu");
-
-        //connect to sqlite database
-        string connectPath = "Data Source = " + Application.streamingAssetsPath + "/database.db";
-        sqliteHelper = new SqliteHelper(connectPath);
-        string playerSql = "select * from player";
-        SqliteDataReader elementsReader = sqliteHelper.ExecuteQuery(playerSql);
-        while (elementsReader.Read()) {
-            string sceneName = elementsReader.GetString(elementsReader.GetOrdinal("scene"));
-            float x = elementsReader.GetFloat(elementsReader.GetOrdinal("posx"));
-            float y = elementsReader.GetFloat(elementsReader.GetOrdinal("posy"));
-            transformScene(sceneName, x, y);
-            //SceneManager.LoadSceneAsync(sceneName);
-            break;
-        }*/
     }
 
     private void Start()
     {
-        saveLoad = new SaveLoad();
-        textInfo = new TextInfo();
         frameNum = 0;
         gameTime = 0.0f;
         status = Status.None;
         nextStatus = Status.Pre;
         statusTime = 0f;
         sceneLoadComplete = false;
-    }
-
-    private void OnDestroy()
-    {
-        //sqliteHelper.CloseConnection();
+        areaManager = null;
+        gameInfo = null;
+        uiManager = UIManager.Instance;
     }
 
     private void Update()
     {
         gameTime = gameTime + Time.deltaTime;
-        statusTime = statusTime + Time.deltaTime;
+        statusTime = statusTime + Time.unscaledDeltaTime;
         if(nextStatus != Status.None)
         {
             //init status
@@ -108,15 +99,18 @@ public class GameManager : MonoBehaviour
                     }
                     break;
                 case Status.Run:
+                    resumeGame();
                     break;
                 case Status.OnUI:
+                    pauseGame();
                     break;
                 case Status.Onload:
+                    pauseGame();
+                    UIMask.SetActive(true);
                     sceneLoadComplete = false;
-                    JObject activeSave = saveLoad.activeSave;
-                    if (activeSave != null)
+                    if (gameInfo != null)
                     {
-                        string scene = (string)activeSave["data"]["player"]["position"]["scene"];
+                        string scene = (string)gameInfo["data"]["player"]["position"]["scene"];
                         SceneManager.LoadSceneAsync(scene);
                     }
                     break;
@@ -134,15 +128,38 @@ public class GameManager : MonoBehaviour
                 case Status.Run:
                     break;
                 case Status.OnUI:
-                    break;
-                case Status.Onload:
-                    if(statusTime > 2f && sceneLoadComplete == true)
+                    if(uiManager.status == UIStatus.Common)
                     {
                         nextStatus = Status.Run;
                     }
                     break;
+                case Status.Onload:
+                    if (statusTime > 2f && sceneLoadComplete == true)
+                    {
+                        nextStatus = Status.Run;
+                        JToken pos = gameInfo["data"]["player"]["position"];
+                        float x = (float)pos["x"];
+                        float y = (float)pos["y"];
+                        player.transform.position = new Vector3(x, y, 0f);
+                        UIMask.SetActive(false);
+                    }
+                    break;
             }
         }
+    }
+
+    public string unique16String()
+    {
+        return Guid.NewGuid().ToString("N").Substring(16,16);
+    }
+    public void registerAreaManager(AreaManager manager) { 
+        areaManager = manager;
+    }
+
+    public void selectNewSave(int index) {
+        gameInfo = saveLoad.getActiveSave(index);
+        uiManager.initUI();
+        MoveToNextScene();
     }
 
     public void setSceneLoadComplete() {
@@ -158,13 +175,10 @@ public class GameManager : MonoBehaviour
 
     private void endBeginingAnimation(VideoPlayer vp) {
         videoPlayer.SetActive(false);
-        saveLoad.createBlankSave();
+        gameInfo = saveLoad.createBlankSave();
+        uiManager.initUI();
         nextStatus = Status.Onload;
     }
-
-/*    public SqliteHelper getConnetion() {
-        return sqliteHelper;
-    }*/
 
     public void pauseGame()
     {
@@ -176,17 +190,13 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1.0f;
     }
 
-    /*public void transformScene(string next, float x, float y)
-    {
+    public void MoveToNextScene() { 
+        if(status == Status.Run)
+        {
+            areaManager.updateActiveSave();
+            saveLoad.save();
+        }
         nextStatus = Status.Onload;
-        SceneManager.LoadSceneAsync(next);
-        *//*GameObject player = GameObject.FindGameObjectWithTag("Player");
-        player.transform.position = new Vector3(x, y, 0);*//*
-
-    }*/
-
-    public void saveGame() { 
     }
-
 }
 

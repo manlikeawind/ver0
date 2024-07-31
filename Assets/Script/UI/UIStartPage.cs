@@ -165,11 +165,13 @@ public class UIStartPage : MonoBehaviour
 
     public void onSaveItemClicked(GameObject sender) {
         int index = Int32.Parse(sender.name);
-        List<JObject> saveJsonList = gameManager.saveLoad.saveList;
+        /*List<JObject> saveJsonList = gameManager.saveLoad.saveList;
         JObject save = saveJsonList[index];
         if ((int)save["valid"] == 1)
         {
-            //string sceneName = (string)save[""];
-        }
+            string sceneName = (string)save[""];
+        }*/
+
+        gameManager.selectNewSave(index);
     }
 }

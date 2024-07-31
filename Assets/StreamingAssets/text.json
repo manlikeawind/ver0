@@ -1,0 +1,22 @@
+{
+	"ui_startPage_continueGame": {
+		"en": "Continue Game",
+		"CHS": "继续游戏",
+		"CHT": "繼續遊戲"
+	},
+	"ui_startPage_newGame": {
+		"en": "New Game",
+		"CHS": "新游戏",
+		"CHT": "新遊戲"
+	},
+	"ui_startPage_setting": {
+		"en": "Setting",
+		"CHS": "设置",
+		"CHT": "設置"
+	},
+	"ui_startPage_endGame": {
+		"en": "End Game",
+		"CHS": "结束游戏",
+		"CHT": "結束遊戲"
+	}
+}

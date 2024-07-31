@@ -10,7 +10,6 @@ public class SaveLoad
 {
     public string basePath;
     public List<JObject> saveList;
-    public JObject activeSave;
 
     public SaveLoad() { 
         basePath = Application.persistentDataPath + "/";
@@ -53,26 +52,26 @@ public class SaveLoad
         }
     }
 
-    public void setActiveSave(int index) {
+    public JObject getActiveSave(int index) {
         JObject save = saveList[index];
         string name = (string)save["name"];
         string readPath = basePath + name;
         StreamReader sr = new StreamReader(readPath);
         string s = sr.ReadToEnd();
-        activeSave = JObject.Parse(s);
         sr.Close();
+        return JObject.Parse(s);
     }
 
     public List<JObject> getSaveList() { 
         return saveList;
     }
 
-    public void createBlankSave() {
+    public JObject createBlankSave() {
         long now = ((DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000);
         string readPath = Application.streamingAssetsPath + "/blankSave.json";
         StreamReader sr = new StreamReader(readPath);
         string s = sr.ReadToEnd();
-        activeSave = JObject.Parse(s);
+        JObject activeSave = JObject.Parse(s);
         activeSave["time"] = now;
         sr.Close();
         string writePath = basePath + "save" + now.ToString() + ".json";
@@ -81,6 +80,7 @@ public class SaveLoad
         sw.Close();
         activeSave["name"] = "save" + now.ToString() + ".json";
         updateSaveList(activeSave);
+        return activeSave;
     }
 
     public void addNewSave() {
