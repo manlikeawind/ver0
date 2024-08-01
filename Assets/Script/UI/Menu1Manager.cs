@@ -1,7 +1,12 @@
+using Common;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Menu1Manager : MonoBehaviour
 {
@@ -20,6 +25,17 @@ public class Menu1Manager : MonoBehaviour
 
     public GameObject itemPrafab;
 
+    public GameObject weaponTab;
+    public GameObject clothingTab;
+    public GameObject foodAndDrugTab;
+    public GameObject metarialTab;
+    public GameObject specialTab;
+    public GameObject settingTab;
+    public GameObject weaponRect;
+    public GameObject clothingRect;
+    public GameObject foodAndDrugRect;
+    public GameObject metarialRect;
+    public GameObject specialRect;
     public GameObject weaponBag;
     public GameObject clothingBag;
     public GameObject foodAndDrugBag;
@@ -35,9 +51,11 @@ public class Menu1Manager : MonoBehaviour
 
     private float sleepTime;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        input = InputCtrl.Instance;
+        uiManager = UIManager.Instance;
+        uiManager.registerMenu1Ctrl(this);
         cont = Content.Weapon;
         onCheckBox = false;
         weaponIndex = 0;
@@ -46,9 +64,7 @@ public class Menu1Manager : MonoBehaviour
         metarialIndex = 0;
         specialIndex = 0;
         sleepTime = 0f;
-        input = InputCtrl.Instance;
-        uiManager = UIManager.Instance;
-        uiManager.registerMenu1Ctrl(this);
+        this.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -65,91 +81,101 @@ public class Menu1Manager : MonoBehaviour
                 else
                 {
                     checkBox.SetActive(false);
+                    sleepTime = 0f;
                 }
-            }else if(intput.getShdL() > 0.5f){
-                switch (cont){
+            }else if(input.getShdL() > 0.5f){
+                switch (cont)
+                {
                     case Content.Weapon:
                         break;
                     case Content.Clothing:
-                        clothingBag.SetActive(false);
-                        weaponBag.SetActive(true);
+                        clothingRect.SetActive(false);
+                        weaponRect.SetActive(true);
                         cont = Content.Weapon;
                         break;
                     case Content.Use:
-                        foodAndDrugBag.SetActive(false);
-                        clothingBag.SetActive(true);
+                        foodAndDrugRect.SetActive(false);
+                        clothingRect.SetActive(true);
                         cont = Content.Clothing;
                         break;
                     case Content.Etc:
-                        metarialBag.SetActive(false);
-                        foodAndDrugBag.SetActive(true);
+                        metarialRect.SetActive(false);
+                        foodAndDrugRect.SetActive(true);
                         cont = Content.Use;
                         break;
                     case Content.Spec:
-                        specialBag.SetActive(false);
-                        metarialBag.SetActive(true);
+                        specialRect.SetActive(false);
+                        metarialRect.SetActive(true);
                         cont = Content.Etc;
                         break;
                 }
-            }else if(input.getShdR() > 0.5f){
-                switch (cont){
+                sleepTime = 0f;
+            }
+            else if (input.getShdR() > 0.5f)
+            {
+                switch (cont)
+                {
                     case Content.Weapon:
-                        clothingBag.SetActive(true);
-                        weaponBag.SetActive(false);
+                        clothingRect.SetActive(true);
+                        weaponRect.SetActive(false);
                         cont = Content.Clothing;
                         break;
                     case Content.Clothing:
-                        foodAndDrugBag.SetActive(true);
-                        clothingBag.SetActive(false);
+                        foodAndDrugRect.SetActive(true);
+                        clothingRect.SetActive(false);
                         cont = Content.Use;
                         break;
                     case Content.Use:
-                        metarialBag.SetActive(true);
-                        foodAndDrugBag.SetActive(false);
+                        metarialRect.SetActive(true);
+                        foodAndDrugRect.SetActive(false);
                         cont = Content.Etc;
                         break;
                     case Content.Etc:
-                        specialBag.SetActive(true);
-                        metarialBag.SetActive(false);
+                        specialRect.SetActive(true);
+                        metarialRect.SetActive(false);
                         cont = Content.Spec;
                         break;
                     case Content.Spec:
                         break;
                 }
-            }else if(intput.getCrsY > 0.5f){
+                sleepTime = 0f;
+            }
+            else if(input.getCrsY() > 0.5f){
                 switch (cont){
                     case Content.Weapon:
                         if(weaponIndex >= col){
-                            changeActiveItem(weaponIndex, weaponIndex - col)
+                            changeActiveItem(weaponIndex, weaponIndex - col);
                             weaponIndex = weaponIndex - col;
                         }
                         break;
                     case Content.Clothing:
                         if(clothingIndex >= col){
-                            changeActiveItem(clothingIndex, clothingIndex - col)
+                            changeActiveItem(clothingIndex, clothingIndex - col);
                             clothingIndex = clothingIndex - col;
                         }
                         break;
                     case Content.Use:
                         if(foodAndDrugIndex >= col){
-                            changeActiveItem(foodAndDrugIndex, foodAndDrugIndex - col)
+                            changeActiveItem(foodAndDrugIndex, foodAndDrugIndex - col);
                             foodAndDrugIndex = foodAndDrugIndex - col;
                         }
                         break;
                     case Content.Etc:
                         if(metarialIndex >= col){
-                            changeActiveItem(metarialIndex, metarialIndex - col)
+                            changeActiveItem(metarialIndex, metarialIndex - col);
                             metarialIndex = metarialIndex - col;
                         }
                         break;
                     case Content.Spec:
                         if(specialIndex >= col){
-                            changeActiveItem(specialIndex, specialIndex - col)
+                            changeActiveItem(specialIndex, specialIndex - col);
                             specialIndex = specialIndex - col;
                         }
                         break;
                 }
-            }else if(intpu.getCrsY < -0.5f){
+                sleepTime = 0f;
+            }
+            else if(input.getCrsY() < -0.5f){
                 int volume = 0;
                 switch (cont){
                     case Content.Weapon:
@@ -188,7 +214,9 @@ public class Menu1Manager : MonoBehaviour
                         }
                         break;
                 }
-            }else if(intput.getCrsX > 0.5f){
+                sleepTime = 0f;
+            }
+            else if(input.getCrsX() > 0.5f){
                 int r = col;
                 switch (cont){
                     case Content.Weapon:
@@ -227,7 +255,9 @@ public class Menu1Manager : MonoBehaviour
                         }
                         break;
                 }
-            }else if(intpu.getCrsX < -0.5f){
+                sleepTime = 0f;
+            }
+            else if(input.getCrsX() < -0.5f){
                 switch (cont){
                     case Content.Weapon:
                         if(weaponIndex > 0){
@@ -260,6 +290,7 @@ public class Menu1Manager : MonoBehaviour
                         }
                         break;
                 }
+                sleepTime = 0f;
             }
         }
     }
@@ -272,40 +303,153 @@ public class Menu1Manager : MonoBehaviour
         
     }
 
-    public void changeWeaponBag(int start, int end, JObject data) {
-        int volume = (int)data["volume"];
-        JArray items = (JArray)data["items"];
+    public void changeWeaponBag(int start, int end) {
+        int volume = (int)bagInfo["weapon"]["volume"];
+        JArray items = (JArray)bagInfo["weapon"]["items"];
         if(weaponBag.transform.childCount < end){
             for(int i = start; i < weaponBag.transform.childCount; i++){
-
+                updateItemInfo(weaponBag.transform.GetChild(i), (JObject)items[i]);
             }
             for(int i = weaponBag.transform.childCount; i < end; i++){
                 GameObject obj = Instantiate(itemPrafab);
                 obj.name = i.ToString();
                 obj.transform.SetParent(weaponBag.transform);
                 obj.transform.localScale = new Vector3(1, 1, 1);
+                updateItemInfo(weaponBag.transform.GetChild(i), (JObject)items[i]);
             }
         }else{
             for(int i = start; i < end; i++){
-
+                updateItemInfo(weaponBag.transform.GetChild(i), (JObject)items[i]);
             }
         }
     }
 
-    public void changeClothingBag(int start, int end, JObject data) {
-
+    public void changeClothingBag(int start, int end) {
+        int volume = (int)bagInfo["clothing"]["volume"];
+        JArray items = (JArray)bagInfo["clothing"]["items"];
+        if (clothingBag.transform.childCount < end)
+        {
+            for (int i = start; i < clothingBag.transform.childCount; i++)
+            {
+                updateItemInfo(clothingBag.transform.GetChild(i), (JObject)items[i]);
+            }
+            for (int i = clothingBag.transform.childCount; i < end; i++)
+            {
+                GameObject obj = Instantiate(itemPrafab);
+                obj.name = i.ToString();
+                obj.transform.SetParent(clothingBag.transform);
+                obj.transform.localScale = new Vector3(1, 1, 1);
+                updateItemInfo(clothingBag.transform.GetChild(i), (JObject)items[i]);
+            }
+        }
+        else
+        {
+            for (int i = start; i < end; i++)
+            {
+                updateItemInfo(clothingBag.transform.GetChild(i), (JObject)items[i]);
+            }
+        }
     }
 
-    public void changefoodAndDrugBag(int start, int end, JObject data) {
-
+    public void changeFoodAndDrugBag(int start, int end) {
+        int volume = (int)bagInfo["food&drug"]["volume"];
+        JArray items = (JArray)bagInfo["food&drug"]["items"];
+        if (foodAndDrugBag.transform.childCount < end)
+        {
+            for (int i = start; i < foodAndDrugBag.transform.childCount; i++)
+            {
+                updateItemInfo(foodAndDrugBag.transform.GetChild(i), (JObject)items[i]);
+            }
+            for (int i = foodAndDrugBag.transform.childCount; i < end; i++)
+            {
+                GameObject obj = Instantiate(itemPrafab);
+                obj.name = i.ToString();
+                obj.transform.SetParent(foodAndDrugBag.transform);
+                obj.transform.localScale = new Vector3(1, 1, 1);
+                updateItemInfo(foodAndDrugBag.transform.GetChild(i), (JObject)items[i]);
+            }
+        }
+        else
+        {
+            for (int i = start; i < end; i++)
+            {
+                updateItemInfo(foodAndDrugBag.transform.GetChild(i), (JObject)items[i]);
+            }
+        }
     }
 
-    public void changeMetarialBag(int start, int end, JObject data) {
-
+    public void changeMetarialBag(int start, int end) {
+        int volume = (int)bagInfo["metarial"]["volume"];
+        JArray items = (JArray)bagInfo["metarial"]["items"];
+        if (metarialBag.transform.childCount < end)
+        {
+            for (int i = start; i < metarialBag.transform.childCount; i++)
+            {
+                updateItemInfo(metarialBag.transform.GetChild(i), (JObject)items[i]);
+            }
+            for (int i = metarialBag.transform.childCount; i < end; i++)
+            {
+                GameObject obj = Instantiate(itemPrafab);
+                obj.name = i.ToString();
+                obj.transform.SetParent(metarialBag.transform);
+                obj.transform.localScale = new Vector3(1, 1, 1);
+                updateItemInfo(metarialBag.transform.GetChild(i), (JObject)items[i]);
+            }
+        }
+        else
+        {
+            for (int i = start; i < end; i++)
+            {
+                updateItemInfo(metarialBag.transform.GetChild(i), (JObject)items[i]);
+            }
+        }
     }
 
-    public void changeSpecialBag(int start, int end, JObject data) {
+    public void changeSpecialBag(int start, int end) {
+        int volume = (int)bagInfo["special"]["volume"];
+        JArray items = (JArray)bagInfo["special"]["items"];
+        if (specialBag.transform.childCount < end)
+        {
+            for (int i = start; i < specialBag.transform.childCount; i++)
+            {
+                updateItemInfo(specialBag.transform.GetChild(i), (JObject)items[i]);
+            }
+            for (int i = specialBag.transform.childCount; i < end; i++)
+            {
+                GameObject obj = Instantiate(itemPrafab);
+                obj.name = i.ToString();
+                obj.transform.SetParent(specialBag.transform);
+                obj.transform.localScale = new Vector3(1, 1, 1);
+                updateItemInfo(specialBag.transform.GetChild(i), (JObject)items[i]);
+            }
+        }
+        else
+        {
+            for (int i = start; i < end; i++)
+            {
+                updateItemInfo(specialBag.transform.GetChild(i), (JObject)items[i]);
+            }
+        }
+    }
 
+    public void updateItemInfo(Transform item, JObject data)
+    {
+        string code = (string)data["code"];
+        if (!code.Equals("0000"))
+        {
+            Sprite icon = uiManager.getIcon(UIIconType.Item, code);
+            item.Find("Icon").GetComponent<Image>().sprite = icon;
+            int count = (int)data["count"];
+            if (count > 1)
+            {
+                item.Find("Count").GetComponent<TextMeshProUGUI>().text = "X" + count;
+            }
+        }
+        else
+        {
+            Sprite icon = uiManager.getIcon(UIIconType.Blank, code);
+            item.Find("Icon").GetComponent<Image>().sprite = icon;
+        }
     }
 
     public void showItemInfo(JObject item){

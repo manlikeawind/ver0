@@ -15,9 +15,9 @@ public class ItemsInfo
         itemList = (JArray)itemsMap["data"];
     }
 
-    public JObject JObject(string code) {
+    public JObject getItemInfo(string code) {
         int index = 0;
         int.TryParse(code, out index);
-        return itemList[index];
+        return (JObject)itemList[index];
     }
 }

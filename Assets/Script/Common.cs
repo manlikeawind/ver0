@@ -48,4 +48,10 @@ namespace Common {
         None,
         Health, Endurence, Shotcut0, Shotcut1, Shotcut2, Shotcut3, Time, Temperature, Detector
     }
+
+    public enum UIIconType
+    {
+        None,
+        Blank, Ability, Item 
+    }
 }

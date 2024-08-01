@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     public GameObject videoPlayer;
     public GameObject UIMask;
     public TextInfo textInfo;
-    public itemInfo itemInfo;
+    public ItemsInfo itemInfo;
 
     public JObject gameInfo;
 
@@ -61,9 +61,8 @@ public class GameManager : MonoBehaviour
         _instance = this;
         saveLoad = new SaveLoad();
         textInfo = new TextInfo();
-        itemInfo = new itemInfo();
+        itemInfo = new ItemsInfo();
         resource = new Resource();
-        input = InputCtrl.Instance;
         DontDestroyOnLoad(gameObject);
     }
 
@@ -78,6 +77,7 @@ public class GameManager : MonoBehaviour
         areaManager = null;
         gameInfo = null;
         uiManager = UIManager.Instance;
+        input = InputCtrl.Instance;
     }
 
     private void Update()
@@ -128,6 +128,11 @@ public class GameManager : MonoBehaviour
                 case Status.Pre:
                     break;
                 case Status.Run:
+                    if(input.getBtnStart() > 0.5f)
+                    {
+                        nextStatus = Status.OnUI;
+                        uiManager.enterUI(UIStatus.Menu1);
+                    }
                     break;
                 case Status.OnUI:
                     if(uiManager.status == UIStatus.Common)

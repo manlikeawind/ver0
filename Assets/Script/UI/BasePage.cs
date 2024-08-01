@@ -24,7 +24,6 @@ public class BasePage : MonoBehaviour
         uiManager = UIManager.Instance;
         gameManager = GameManager.Instance;
         uiManager.registerBasePageCtrl(this);
-        changeShotcut0(0);
     }
 
     public void changeHealth(float health, float shield)
@@ -40,20 +39,20 @@ public class BasePage : MonoBehaviour
         endurenceSlider.GetComponent<Slider>().value = endurenceValue;
     }
 
-    public void changeShotcut0(int index)
+    public void changeShotcut0(string code)
     {
-        Sprite icon = gameManager.resource.getAbilityIcon(index);
+        Sprite icon = uiManager.getIcon(UIIconType.Ability, code);
         icon0.GetComponent<Image>().sprite = icon;
     }
-    public void changeShotcut1(int index)
+    public void changeShotcut1(string code)
     {
 
     }
-    public void changeShotcut2(int index)
+    public void changeShotcut2(string code)
     {
 
     }
-    public void changeShotcut3(int index)
+    public void changeShotcut3(string code)
     {
 
     }

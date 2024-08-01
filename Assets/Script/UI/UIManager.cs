@@ -42,7 +42,6 @@ public class UIManager : MonoBehaviour
     }
 
     public void enterUI(UIStatus s) {
-        status = s;
         switch (s)
         {
             case UIStatus.Menu0:
@@ -55,6 +54,8 @@ public class UIManager : MonoBehaviour
                 shotCut.SetActive(true);
                 break;
         }
+        baseUI.SetActive(false);
+        status = s;
     }
 
     public void exitUI()
@@ -71,7 +72,27 @@ public class UIManager : MonoBehaviour
                 shotCut.SetActive(false);
                 break;
         }
+        baseUI.SetActive(true);
         status = UIStatus.Common;
+    }
+
+    public Sprite getIcon(UIIconType iconType, string code) {
+        int index = 0;
+        int.TryParse(code, out index);
+        Sprite r = null;
+        switch (iconType)
+        {
+            case UIIconType.Blank:
+                r = gameManager.resource.getBlankPng();
+                break;
+            case UIIconType.Ability:
+                r = gameManager.resource.getAbilityIcon(index);
+                break;
+            case UIIconType.Item:
+                r = gameManager.resource.getItemIcon(index);
+                break;
+        }
+        return r;
     }
 
     public void registerBasePageCtrl(BasePage basePage)
@@ -85,7 +106,7 @@ public class UIManager : MonoBehaviour
     }
 
     public void initUI() {
-        JToken data = gameManager.gameInfo["data"];
+        JObject data = (JObject)gameManager.gameInfo["data"];
         float health = (float)data["player"]["status"]["health"];
         float shield = (float)data["player"]["status"]["shield"];
         basePageCtrl.changeHealth(health, shield);
@@ -93,7 +114,17 @@ public class UIManager : MonoBehaviour
         float endurence = (float)data["player"]["status"]["endurence"];
         basePageCtrl.changeEndurence(endurence);
 
-        menu1Ctrl.setBagInfo(data["bag"]);
+        menu1Ctrl.setBagInfo((JObject)data["bag"]);
+        int weaponVolume = (int)data["bag"]["weapon"]["volume"];
+        menu1Ctrl.changeWeaponBag(0, weaponVolume);
+        int clothingVolume = (int)data["bag"]["clothing"]["volume"];
+        menu1Ctrl.changeClothingBag(0, clothingVolume);
+        int foodAndDrugVolume = (int)data["bag"]["food&drug"]["volume"];
+        menu1Ctrl.changeFoodAndDrugBag(0, foodAndDrugVolume);
+        int metarialVolume = (int)data["bag"]["metarial"]["volume"];
+        menu1Ctrl.changeMetarialBag(0, metarialVolume);
+        int specialVolume = (int)data["bag"]["special"]["volume"];
+        menu1Ctrl.changeSpecialBag(0, specialVolume);
     }
 
     public void changeUI(UIDataType dataType, JToken data) {
@@ -109,19 +140,19 @@ public class UIManager : MonoBehaviour
                 basePageCtrl.changeEndurence(endurence);
                 break;
             case UIDataType.Shotcut0:
-                int index0 = (int)data["v"];
+                string index0 = (string)data["v"];
                 basePageCtrl.changeShotcut0(index0);
                 break;
             case UIDataType.Shotcut1:
-                int index1 = (int)data["v"];
+                string index1 = (string)data["v"];
                 basePageCtrl.changeShotcut1(index1);
                 break;
             case UIDataType.Shotcut2:
-                int index2 = (int)data["v"];
+                string index2 = (string)data["v"];
                 basePageCtrl.changeShotcut2(index2);
                 break;
             case UIDataType.Shotcut3:
-                int index3 = (int)data["v"];
+                string index3 = (string)data["v"];
                 basePageCtrl.changeShotcut3(index3);
                 break;
             case UIDataType.Time:
