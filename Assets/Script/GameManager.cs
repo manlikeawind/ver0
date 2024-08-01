@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     public GameObject videoPlayer;
     public GameObject UIMask;
     public TextInfo textInfo;
+    public itemInfo itemInfo;
 
     public JObject gameInfo;
 
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour
         _instance = this;
         saveLoad = new SaveLoad();
         textInfo = new TextInfo();
+        itemInfo = new itemInfo();
         resource = new Resource();
         input = InputCtrl.Instance;
         DontDestroyOnLoad(gameObject);

@@ -93,7 +93,7 @@ public class UIManager : MonoBehaviour
         float endurence = (float)data["player"]["status"]["endurence"];
         basePageCtrl.changeEndurence(endurence);
 
-
+        menu1Ctrl.setBagInfo(data["bag"]);
     }
 
     public void changeUI(UIDataType dataType, JToken data) {
