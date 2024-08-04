@@ -7,11 +7,13 @@ public class Resource
 {
     private Sprite[] abilityIconList;
     private Sprite[] itemIconsList;
+    private Sprite[] UIIconsBgList;
     private Sprite blankPng;
     public Resource() {
         abilityIconList = Resources.LoadAll<Sprite>("Sprite/background/color");
         itemIconsList = Resources.LoadAll<Sprite>("Sprite/UI/item");
         blankPng = Resources.Load<Sprite>("Sprite/UI/blankIcon");
+        UIIconsBgList = Resources.LoadAll<Sprite>("Sprite/UI/icon_bg");
     }
 
     public Sprite getBlankPng() {
@@ -39,6 +41,17 @@ public class Resource
         else
         {
             return itemIconsList[index];
+        }
+    }
+
+    public Sprite getUIIconBg(int index) {
+        if (index >= UIIconsBgList.Length)
+        {
+            return null;
+        }
+        else
+        {
+            return UIIconsBgList[index];
         }
     }
 }

@@ -95,7 +95,13 @@ public class UIManager : MonoBehaviour
         return r;
     }
 
-    public void registerBasePageCtrl(BasePage basePage)
+    public Sprite getIconBg(int index)
+    {
+        Sprite r = gameManager.resource.getUIIconBg(index);
+        return r;
+    }
+
+        public void registerBasePageCtrl(BasePage basePage)
     {
         basePageCtrl = basePage;
     }
@@ -115,16 +121,7 @@ public class UIManager : MonoBehaviour
         basePageCtrl.changeEndurence(endurence);
 
         menu1Ctrl.setBagInfo((JObject)data["bag"]);
-        int weaponVolume = (int)data["bag"]["weapon"]["volume"];
-        menu1Ctrl.changeWeaponBag(0, weaponVolume);
-        int clothingVolume = (int)data["bag"]["clothing"]["volume"];
-        menu1Ctrl.changeClothingBag(0, clothingVolume);
-        int foodAndDrugVolume = (int)data["bag"]["food&drug"]["volume"];
-        menu1Ctrl.changeFoodAndDrugBag(0, foodAndDrugVolume);
-        int metarialVolume = (int)data["bag"]["metarial"]["volume"];
-        menu1Ctrl.changeMetarialBag(0, metarialVolume);
-        int specialVolume = (int)data["bag"]["special"]["volume"];
-        menu1Ctrl.changeSpecialBag(0, specialVolume);
+        menu1Ctrl.initMenu1();
     }
 
     public void changeUI(UIDataType dataType, JToken data) {

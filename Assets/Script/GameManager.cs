@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
                     }
                     break;
                 case Status.Onload:
-                    if (statusTime > 2f && sceneLoadComplete == true)
+                    if (statusTime > 1f && sceneLoadComplete == true)
                     {
                         nextStatus = Status.Run;
                         JToken pos = gameInfo["data"]["player"]["position"];
@@ -180,6 +180,11 @@ public class GameManager : MonoBehaviour
         videoPlayer.SetActive(true);
     }
 
+    public void saveGame()
+    {
+        saveLoad.save(gameInfo);
+    }
+
     private void endBeginingAnimation(VideoPlayer vp) {
         videoPlayer.SetActive(false);
         gameInfo = saveLoad.createBlankSave();
@@ -201,7 +206,7 @@ public class GameManager : MonoBehaviour
         if(status == Status.Run)
         {
             areaManager.updateActiveSave();
-            saveLoad.save();
+            saveGame();
         }
         nextStatus = Status.Onload;
     }

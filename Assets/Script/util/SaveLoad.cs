@@ -72,14 +72,8 @@ public class SaveLoad
         StreamReader sr = new StreamReader(readPath);
         string s = sr.ReadToEnd();
         JObject activeSave = JObject.Parse(s);
-        activeSave["time"] = now;
         sr.Close();
-        string writePath = basePath + "save" + now.ToString() + ".json";
-        StreamWriter sw = new StreamWriter(writePath);
-        sw.Write(activeSave.ToString());
-        sw.Close();
-        activeSave["name"] = "save" + now.ToString() + ".json";
-        updateSaveList(activeSave);
+        save(activeSave);
         return activeSave;
     }
 
@@ -91,7 +85,15 @@ public class SaveLoad
     public void updateSave() { 
     }
 
-    public void save() { 
+    public void save(JObject data) {
+        long now = ((DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000);
+        string writePath = basePath + "save" + now.ToString() + ".json";
+        StreamWriter sw = new StreamWriter(writePath);
+        data["time"] = now;
+        data["name"] = "save" + now.ToString() + ".json";
+        sw.Write(data.ToString());
+        sw.Close();
+        updateSaveList(data);
     }
 
     public void updateSaveList(JObject obj) {

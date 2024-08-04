@@ -11,10 +11,11 @@ using UnityEngine.UI;
 public class Menu1Manager : MonoBehaviour
 {
     public const int col = 5;
+    public const int rowInSight = 5;
     public enum Content
     {
         None,
-        Weapon, Clothing, Use, Etc, Spec
+        Weapon, Clothing, Use, Etc, Spec, Option
     }
 
     private UIManager uiManager;
@@ -30,7 +31,7 @@ public class Menu1Manager : MonoBehaviour
     public GameObject foodAndDrugTab;
     public GameObject metarialTab;
     public GameObject specialTab;
-    public GameObject settingTab;
+    public GameObject optionTab;
     public GameObject weaponRect;
     public GameObject clothingRect;
     public GameObject foodAndDrugRect;
@@ -41,6 +42,8 @@ public class Menu1Manager : MonoBehaviour
     public GameObject foodAndDrugBag;
     public GameObject metarialBag;
     public GameObject specialBag;
+    public GameObject content1;
+    public GameObject content2;
     public GameObject checkBox;
 
     private int weaponIndex;
@@ -71,7 +74,7 @@ public class Menu1Manager : MonoBehaviour
     void Update()
     {
         sleepTime = sleepTime + Time.unscaledDeltaTime;
-        if(sleepTime > 0.3f){
+        if(sleepTime > 0.2f){
             if(input.getBtnB() > 0.5f)
             {
                 if(onCheckBox == false)
@@ -89,24 +92,39 @@ public class Menu1Manager : MonoBehaviour
                     case Content.Weapon:
                         break;
                     case Content.Clothing:
+                        clothingTab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        weaponTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
                         clothingRect.SetActive(false);
                         weaponRect.SetActive(true);
                         cont = Content.Weapon;
                         break;
                     case Content.Use:
+                        foodAndDrugTab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        clothingTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
                         foodAndDrugRect.SetActive(false);
                         clothingRect.SetActive(true);
                         cont = Content.Clothing;
                         break;
                     case Content.Etc:
+                        metarialTab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        foodAndDrugTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
                         metarialRect.SetActive(false);
                         foodAndDrugRect.SetActive(true);
                         cont = Content.Use;
                         break;
                     case Content.Spec:
+                        specialTab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        metarialTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
                         specialRect.SetActive(false);
                         metarialRect.SetActive(true);
                         cont = Content.Etc;
+                        break;
+                    case Content.Option:
+                        optionTab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        specialTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+                        content1.SetActive(true);
+                        content2.SetActive(false);
+                        cont = Content.Spec;
                         break;
                 }
                 sleepTime = 0f;
@@ -116,176 +134,405 @@ public class Menu1Manager : MonoBehaviour
                 switch (cont)
                 {
                     case Content.Weapon:
+                        weaponTab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        clothingTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
                         clothingRect.SetActive(true);
                         weaponRect.SetActive(false);
                         cont = Content.Clothing;
                         break;
                     case Content.Clothing:
+                        clothingTab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        foodAndDrugTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
                         foodAndDrugRect.SetActive(true);
                         clothingRect.SetActive(false);
                         cont = Content.Use;
                         break;
                     case Content.Use:
+                        foodAndDrugTab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        metarialTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
                         metarialRect.SetActive(true);
                         foodAndDrugRect.SetActive(false);
                         cont = Content.Etc;
                         break;
                     case Content.Etc:
+                        metarialTab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        specialTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
                         specialRect.SetActive(true);
                         metarialRect.SetActive(false);
                         cont = Content.Spec;
                         break;
                     case Content.Spec:
+                        specialTab.transform.localScale = new Vector3(1f, 1f, 1f);
+                        optionTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+                        content2.SetActive(true);
+                        content1.SetActive(false);
+                        cont = Content.Option;
+                        break;
+                    case Content.Option:
                         break;
                 }
                 sleepTime = 0f;
             }
-            else if(input.getCrsY() > 0.5f){
-                switch (cont){
+            else if (input.getCrsY() > 0.5f)
+            {
+                int y;
+                float z;
+                int volume;
+                int nowRow;
+                float newR;
+                switch (cont)
+                {
                     case Content.Weapon:
-                        if(weaponIndex >= col){
-                            changeActiveItem(weaponIndex, weaponIndex - col);
+                        if (weaponIndex >= col)
+                        {
+                            changeActiveItem(weaponBag, weaponIndex, weaponIndex - col);
                             weaponIndex = weaponIndex - col;
+                            volume = (int)bagInfo["weapon"]["volume"];
+                            y = volume / col;
+                            if (volume % col != 0)
+                            {
+                                y++;
+                            }
+                            z = (y - rowInSight) * (1f - weaponRect.GetComponent<ScrollRect>().normalizedPosition.y);
+                            nowRow = weaponIndex / col;
+                            if (weaponIndex % col != 0)
+                            {
+                                nowRow++;
+                            }
+                            if (z > (float)nowRow)
+                            {
+                                newR = (float)nowRow / (float)(y - rowInSight);
+                                weaponRect.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1f - newR);
+                            }
                         }
                         break;
                     case Content.Clothing:
-                        if(clothingIndex >= col){
-                            changeActiveItem(clothingIndex, clothingIndex - col);
+                        if (clothingIndex >= col)
+                        {
+                            changeActiveItem(clothingBag, clothingIndex, clothingIndex - col);
                             clothingIndex = clothingIndex - col;
+                            volume = (int)bagInfo["clothing"]["volume"];
+                            y = volume / col;
+                            if (volume % col != 0)
+                            {
+                                y++;
+                            }
+                            z = (y - rowInSight) * (1f - clothingRect.GetComponent<ScrollRect>().normalizedPosition.y);
+                            nowRow = clothingIndex / col;
+                            if (clothingIndex % col != 0)
+                            {
+                                nowRow++;
+                            }
+                            if (z > (float)nowRow)
+                            {
+                                newR = (float)nowRow / (float)(y - rowInSight);
+                                clothingRect.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1f - newR);
+                            }
                         }
                         break;
                     case Content.Use:
-                        if(foodAndDrugIndex >= col){
-                            changeActiveItem(foodAndDrugIndex, foodAndDrugIndex - col);
+                        if (foodAndDrugIndex >= col)
+                        {
+                            changeActiveItem(foodAndDrugBag, foodAndDrugIndex, foodAndDrugIndex - col);
                             foodAndDrugIndex = foodAndDrugIndex - col;
+                            volume = (int)bagInfo["food&drug"]["volume"];
+                            y = volume / col;
+                            if (volume % col != 0)
+                            {
+                                y++;
+                            }
+                            z = (y - rowInSight) * (1f - foodAndDrugRect.GetComponent<ScrollRect>().normalizedPosition.y);
+                            nowRow = foodAndDrugIndex / col;
+                            if (foodAndDrugIndex % col != 0)
+                            {
+                                nowRow++;
+                            }
+                            if (z > (float)nowRow)
+                            {
+                                newR = (float)nowRow / (float)(y - rowInSight);
+                                foodAndDrugRect.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1f - newR);
+                            }
                         }
                         break;
                     case Content.Etc:
-                        if(metarialIndex >= col){
-                            changeActiveItem(metarialIndex, metarialIndex - col);
+                        if (metarialIndex >= col)
+                        {
+                            changeActiveItem(metarialBag, metarialIndex, metarialIndex - col);
                             metarialIndex = metarialIndex - col;
+                            volume = (int)bagInfo["metarial"]["volume"];
+                            y = volume / col;
+                            if (volume % col != 0)
+                            {
+                                y++;
+                            }
+                            z = (y - rowInSight) * (1f - metarialRect.GetComponent<ScrollRect>().normalizedPosition.y);
+                            nowRow = metarialIndex / col;
+                            if (metarialIndex % col != 0)
+                            {
+                                nowRow++;
+                            }
+                            if (z > (float)nowRow)
+                            {
+                                newR = (float)nowRow / (float)(y - rowInSight);
+                                metarialRect.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1f - newR);
+                            }
                         }
                         break;
                     case Content.Spec:
-                        if(specialIndex >= col){
-                            changeActiveItem(specialIndex, specialIndex - col);
+                        if (specialIndex >= col)
+                        {
+                            changeActiveItem(specialBag, specialIndex, specialIndex - col);
                             specialIndex = specialIndex - col;
+                            volume = (int)bagInfo["special"]["volume"];
+                            y = volume / col;
+                            if (volume % col != 0)
+                            {
+                                y++;
+                            }
+                            z = (y - rowInSight) * (1f - specialRect.GetComponent<ScrollRect>().normalizedPosition.y);
+                            nowRow = specialIndex / col;
+                            if (specialIndex % col != 0)
+                            {
+                                nowRow++;
+                            }
+                            if (z > (float)nowRow)
+                            {
+                                newR = (float)nowRow / (float)(y - rowInSight);
+                                specialRect.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1f - newR);
+                            }
                         }
                         break;
                 }
                 sleepTime = 0f;
             }
-            else if(input.getCrsY() < -0.5f){
-                int volume = 0;
-                switch (cont){
+            else if (input.getCrsY() < -0.5f)
+            {
+                int y;
+                float z;
+                int volume;
+                int nowRow;
+                float newR = 0f;
+                switch (cont)
+                {
                     case Content.Weapon:
                         volume = (int)bagInfo["weapon"]["volume"];
-                        if(weaponIndex + col < volume){
-                            changeActiveItem(weaponIndex, weaponIndex + col);
+                        if (weaponIndex + col < volume)
+                        {
+                            changeActiveItem(weaponBag, weaponIndex, weaponIndex + col);
                             weaponIndex = weaponIndex + col;
+                            y = volume / col;
+                            if (volume % col != 0)
+                            {
+                                y++;
+                            }
+                            z = (y - rowInSight) * (1 - weaponRect.GetComponent<ScrollRect>().normalizedPosition.y);
+                            nowRow = weaponIndex / col + 1;
+                            if (weaponIndex % col != 0)
+                            {
+                                nowRow++;
+                            }
+                            if (z + rowInSight < (float)nowRow)
+                            {
+                                newR = (float)(nowRow - rowInSight) / (float)(y - rowInSight);
+                                weaponRect.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1f - newR);
+                            }
                         }
                         break;
                     case Content.Clothing:
                         volume = (int)bagInfo["clothing"]["volume"];
-                        if(clothingIndex + col < volume){
-                            changeActiveItem(clothingIndex, clothingIndex + col);
+                        if (clothingIndex + col < volume)
+                        {
+                            changeActiveItem(clothingBag, clothingIndex, clothingIndex + col);
                             clothingIndex = clothingIndex + col;
+                            y = volume / col;
+                            if (volume % col != 0)
+                            {
+                                y++;
+                            }
+                            z = (y - rowInSight) * (1 - clothingRect.GetComponent<ScrollRect>().normalizedPosition.y);
+                            nowRow = clothingIndex / col + 1;
+                            if (clothingIndex % col != 0)
+                            {
+                                nowRow++;
+                            }
+                            if (z + rowInSight < (float)nowRow)
+                            {
+                                newR = (float)(nowRow - rowInSight) / (float)(y - rowInSight);
+                                clothingRect.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1f - newR);
+                            }
                         }
                         break;
                     case Content.Use:
                         volume = (int)bagInfo["food&drug"]["volume"];
-                        if(foodAndDrugIndex + col < volume){
-                            changeActiveItem(foodAndDrugIndex, foodAndDrugIndex + col);
+                        if (foodAndDrugIndex + col < volume)
+                        {
+                            changeActiveItem(foodAndDrugBag, foodAndDrugIndex, foodAndDrugIndex + col);
                             foodAndDrugIndex = foodAndDrugIndex + col;
+                            y = volume / col;
+                            if (volume % col != 0)
+                            {
+                                y++;
+                            }
+                            z = (y - rowInSight) * (1 - foodAndDrugRect.GetComponent<ScrollRect>().normalizedPosition.y);
+                            nowRow = foodAndDrugIndex / col + 1;
+                            if (foodAndDrugIndex % col != 0)
+                            {
+                                nowRow++;
+                            }
+                            if (z + rowInSight < (float)nowRow)
+                            {
+                                newR = (float)(nowRow - rowInSight) / (float)(y - rowInSight);
+                                foodAndDrugRect.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1f - newR);
+                            }
                         }
                         break;
                     case Content.Etc:
                         volume = (int)bagInfo["metarial"]["volume"];
-                        if(metarialIndex + col < volume){
-                            changeActiveItem(metarialIndex, metarialIndex + col);
+                        if (metarialIndex + col < volume)
+                        {
+                            changeActiveItem(metarialBag, metarialIndex, metarialIndex + col);
                             metarialIndex = metarialIndex + col;
+                            y = volume / col;
+                            if (volume % col != 0)
+                            {
+                                y++;
+                            }
+                            z = (y - rowInSight) * (1f - metarialRect.GetComponent<ScrollRect>().normalizedPosition.y);
+                            nowRow = metarialIndex / col + 1;
+                            if (metarialIndex % col != 0)
+                            {
+                                nowRow++;
+                            }
+                            if (z + rowInSight < (float)nowRow)
+                            {
+                                newR = (float)(nowRow - rowInSight) / (float)(y - rowInSight);
+                                metarialRect.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1f - newR);
+                            }
                         }
                         break;
                     case Content.Spec:
                         volume = (int)bagInfo["special"]["volume"];
-                        if(specialIndex + col < volume){
-                            changeActiveItem(specialIndex, specialIndex + col);
+                        if (specialIndex + col < volume)
+                        {
+                            changeActiveItem(specialBag, specialIndex, specialIndex + col);
                             specialIndex = specialIndex + col;
+                            y = volume / col;
+                            if (volume % col != 0)
+                            {
+                                y++;
+                            }
+                            z = (y - rowInSight) * (1 - specialRect.GetComponent<ScrollRect>().normalizedPosition.y);
+                            nowRow = specialIndex / col + 1;
+                            if (specialIndex % col != 0)
+                            {
+                                nowRow++;
+                            }
+                            if (z + rowInSight < (float)nowRow)
+                            {
+                                newR = (float)(nowRow - rowInSight) / (float)(y - rowInSight);
+                                specialRect.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1f - newR);
+                            }
                         }
                         break;
                 }
                 sleepTime = 0f;
             }
-            else if(input.getCrsX() > 0.5f){
+            else if (input.getCrsX() > 0.5f)
+            {
                 int r = col;
-                switch (cont){
+                int volume = 0;
+                switch (cont)
+                {
                     case Content.Weapon:
+                        volume = (int)bagInfo["weapon"]["volume"];
                         r = weaponIndex % col;
-                        if(r < col - 1){
-                            changeActiveItem(weaponIndex, weaponIndex + 1);
+                        if (r < col - 1 && weaponIndex < volume - 1)
+                        {
+                            changeActiveItem(weaponBag, weaponIndex, weaponIndex + 1);
                             weaponIndex++;
                         }
                         break;
                     case Content.Clothing:
+                        volume = (int)bagInfo["clothing"]["volume"];
                         r = clothingIndex % col;
-                        if(r < col - 1){
-                            changeActiveItem(clothingIndex, clothingIndex + 1);
+                        if (r < col - 1 && clothingIndex < volume - 1)
+                        {
+                            changeActiveItem(clothingBag, clothingIndex, clothingIndex + 1);
                             clothingIndex++;
                         }
                         break;
                     case Content.Use:
+                        volume = (int)bagInfo["food&drug"]["volume"];
                         r = foodAndDrugIndex % col;
-                        if(r < col - 1){
-                            changeActiveItem(foodAndDrugIndex, foodAndDrugIndex + 1);
+                        if (r < col - 1 && foodAndDrugIndex < volume - 1)
+                        {
+                            changeActiveItem(foodAndDrugBag, foodAndDrugIndex, foodAndDrugIndex + 1);
                             foodAndDrugIndex++;
                         }
                         break;
                     case Content.Etc:
+                        volume = (int)bagInfo["metarial"]["volume"];
                         r = metarialIndex % col;
-                        if(r < col - 1){
-                            changeActiveItem(metarialIndex, metarialIndex + 1);
+                        if (r < col - 1 && metarialIndex < volume - 1)
+                        {
+                            changeActiveItem(metarialBag, metarialIndex, metarialIndex + 1);
                             metarialIndex++;
                         }
                         break;
                     case Content.Spec:
+                        volume = (int)bagInfo["special"]["volume"];
                         r = specialIndex % col;
-                        if(r < col - 1){
-                            changeActiveItem(specialIndex, specialIndex + 1);
+                        if (r < col - 1 && specialIndex < volume - 1)
+                        {
+                            changeActiveItem(specialBag, specialIndex, specialIndex + 1);
                             specialIndex++;
                         }
                         break;
                 }
                 sleepTime = 0f;
             }
-            else if(input.getCrsX() < -0.5f){
-                switch (cont){
+            else if (input.getCrsX() < -0.5f)
+            {
+                int r = 0;
+                switch (cont)
+                {
                     case Content.Weapon:
-                        if(weaponIndex > 0){
-                            changeActiveItem(weaponIndex, weaponIndex - 1);
+                        r = weaponIndex % col;
+                        if (weaponIndex > 0 && r > 0)
+                        {
+                            changeActiveItem(weaponBag, weaponIndex, weaponIndex - 1);
                             weaponIndex--;
                         }
                         break;
                     case Content.Clothing:
-                        if(clothingIndex > 0){
-                            changeActiveItem(clothingIndex, clothingIndex - 1);
+                        r = clothingIndex % col;
+                        if (clothingIndex > 0 && r > 0)
+                        {
+                            changeActiveItem(clothingBag, clothingIndex, clothingIndex - 1);
                             clothingIndex--;
                         }
                         break;
                     case Content.Use:
-                        if(foodAndDrugIndex > 0){
-                            changeActiveItem(foodAndDrugIndex, foodAndDrugIndex - 1);
+                        r = foodAndDrugIndex % col;
+                        if (foodAndDrugIndex > 0 && r > 0)
+                        {
+                            changeActiveItem(foodAndDrugBag, foodAndDrugIndex, foodAndDrugIndex - 1);
                             foodAndDrugIndex--;
                         }
                         break;
                     case Content.Etc:
-                        if(metarialIndex > 0){
-                            changeActiveItem(metarialIndex, metarialIndex - 1);
+                        r = metarialIndex % col;
+                        if (metarialIndex > 0 && r > 0)
+                        {
+                            changeActiveItem(metarialBag, metarialIndex, metarialIndex - 1);
                             metarialIndex--;
                         }
                         break;
                     case Content.Spec:
-                        if(specialIndex > 0){
-                            changeActiveItem(specialIndex, specialIndex - 1);
+                        r = specialIndex % col;
+                        if (specialIndex > 0 && r > 0)
+                        {
+                            changeActiveItem(specialBag, specialIndex, specialIndex - 1);
                             specialIndex--;
                         }
                         break;
@@ -299,8 +546,51 @@ public class Menu1Manager : MonoBehaviour
         bagInfo = data;
     }
 
-    public void changeActiveItem(int from, int to){
-        
+    public void initMenu1() {
+        weaponTab.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+        int weaponVolume = (int)bagInfo["weapon"]["volume"];
+        for (int i = weaponVolume; i < weaponBag.transform.childCount; i++)
+        {
+            Destroy(weaponBag.transform.GetChild(i).gameObject);
+        }
+        changeWeaponBag(0, weaponVolume);
+        changeActiveItem(weaponBag, -1, 0);
+        int clothingVolume = (int)bagInfo["clothing"]["volume"];
+        for (int i = clothingVolume; i < clothingBag.transform.childCount; i++)
+        {
+            Destroy(clothingBag.transform.GetChild(i).gameObject);
+        }
+        changeClothingBag(0, clothingVolume);
+        changeActiveItem(clothingBag, -1, 0);
+        int foodAndDrugVolume = (int)bagInfo["food&drug"]["volume"];
+        for (int i = foodAndDrugVolume; i < foodAndDrugBag.transform.childCount; i++)
+        {
+            Destroy(foodAndDrugBag.transform.GetChild(i).gameObject);
+        }
+        changeFoodAndDrugBag(0, foodAndDrugVolume);
+        changeActiveItem(foodAndDrugBag, -1, 0);
+        int metarialVolume = (int)bagInfo["metarial"]["volume"];
+        for (int i = metarialVolume; i < metarialBag.transform.childCount; i++)
+        {
+            Destroy(metarialBag.transform.GetChild(i).gameObject);
+        }
+        changeMetarialBag(0, metarialVolume);
+        changeActiveItem(metarialBag, -1, 0);
+        int specialVolume = (int)bagInfo["special"]["volume"];
+        for (int i = specialVolume; i < specialBag.transform.childCount; i++)
+        {
+            Destroy(specialBag.transform.GetChild(i).gameObject);
+        }
+        changeSpecialBag(0, specialVolume);
+        changeActiveItem(specialBag, -1, 0);
+    }
+
+    public void changeActiveItem(GameObject obj, int from, int to){
+        if(from >= 0)
+        {
+            obj.transform.GetChild(from).GetComponent<Image>().sprite = uiManager.getIconBg(0);
+        }
+        obj.transform.GetChild(to).GetComponent<Image>().sprite = uiManager.getIconBg(2);
     }
 
     public void changeWeaponBag(int start, int end) {
