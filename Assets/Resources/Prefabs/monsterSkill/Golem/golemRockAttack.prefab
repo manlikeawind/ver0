@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 725347166501975686}
   - component: {fileID: 725347166501975687}
   - component: {fileID: 725347166501975685}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: golemRockAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,3 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 392657c36d50aaf44a0f5822eb7e9f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dir: 1
+  x: 0
+  y: 0
+  sprd: {fileID: 0}
+  time: -1

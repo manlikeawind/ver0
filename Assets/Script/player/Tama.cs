@@ -23,6 +23,7 @@ public class Tama : MonoBehaviour
     public Status nextStatus;
     private int statusIntParam1;
     public float statusTime;
+    private Transform interact;
 
     private float dir_x;
     private float dir_y;
@@ -72,7 +73,7 @@ public class Tama : MonoBehaviour
     {
         status = Status.Idle;
         nextStatus = Status.None;
-
+        interact = null;
         groundLayer = 1 << LayerMask.NameToLayer("GroundLayer");
         platformLayer = 1 << LayerMask.NameToLayer("Platform");
         ladderLayer = 1 << LayerMask.NameToLayer("Ladder");
@@ -104,6 +105,13 @@ public class Tama : MonoBehaviour
         onPlatform = Physics2D.OverlapCircle((Vector2)transform.position + bottomOffset, sensorRadius, platformLayer);
         onLadder = Physics2D.OverlapCircle((Vector2)transform.position + bottomOffset, sensorRadius, ladderLayer);
 
+        if(status == Status.Idle || status == Status.Run)
+        {
+            if(interact != null && btn_a > 0.5f)
+            {
+                interact.GetComponent<Interact>().startInteract();
+            }
+        }
         //check status
         if (nextStatus == Status.None)
         {
@@ -309,4 +317,7 @@ public class Tama : MonoBehaviour
         
     }
 
+    public void setInteract(Transform transform) {
+        interact = transform;
+    }
 }

@@ -4321,7 +4321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56ee4340743eccd4ea05b11f9e1043e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 1806688974}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -5781,7 +5781,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &721514421
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7378,7 +7378,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 0}
-  player: {fileID: 1806688974}
   frameNum: 0
   gameTime: 0
   videoPlayer: {fileID: 1734912311}
@@ -8200,7 +8199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1074329955
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12079,12 +12078,12 @@ PrefabInstance:
     - target: {fileID: 8050993144932091703, guid: 11d02437067b3064788319579f58ce37,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 13.07
+      value: 30.17
       objectReference: {fileID: 0}
     - target: {fileID: 8050993144932091703, guid: 11d02437067b3064788319579f58ce37,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.22
+      value: 7.3
       objectReference: {fileID: 0}
     - target: {fileID: 8050993144932091703, guid: 11d02437067b3064788319579f58ce37,
         type: 3}
@@ -12843,7 +12842,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1882008369
 RectTransform:
   m_ObjectHideFlags: 0

@@ -30,7 +30,7 @@ public class Fruit : BaseObj
     }
     public override void validate()
     {
-        valid = true;
+        /*valid = true;
         if (attr.status == 1)
         {
             rgbd.bodyType = RigidbodyType2D.Static;
@@ -45,7 +45,7 @@ public class Fruit : BaseObj
         }
         else { 
             this.transform.position = new Vector2(attr.x, attr.y);
-        }
+        }*/
     }
     public override void invalid()
     {

@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     private AreaManager areaManager;
     private UIManager uiManager;
 
-    public GameObject player;
+    private GameObject hero;
 
     public uint frameNum;
     public float gameTime;
@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
         gameInfo = null;
         uiManager = UIManager.Instance;
         input = InputCtrl.Instance;
+        hero = GameObject.FindWithTag("Player");
     }
 
     private void Update()
@@ -147,7 +148,7 @@ public class GameManager : MonoBehaviour
                         JToken pos = gameInfo["data"]["player"]["position"];
                         float x = (float)pos["x"];
                         float y = (float)pos["y"];
-                        player.transform.position = new Vector3(x, y, 0f);
+                        hero.transform.position = new Vector3(x, y, 0f);
                         UIMask.SetActive(false);
                     }
                     break;

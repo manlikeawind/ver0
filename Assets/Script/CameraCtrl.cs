@@ -20,20 +20,20 @@ public class CameraCtrl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /*transform.position = new Vector3(
+        transform.position = new Vector3(
             player.transform.position.x,
             player.transform.position.y + 3.7775f,
-            transform.position.z);*/
+            transform.position.z);
         status = Status.Idle;
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*transform.position = new Vector3(
+        transform.position = new Vector3(
             player.transform.position.x,
             player.transform.position.y + 3.7775f,
-            transform.position.z);*/
+            transform.position.z);
     }
 
     void setPlayer(GameObject p)
